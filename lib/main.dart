@@ -392,27 +392,19 @@ class _RandomNumberPageState extends State<RandomNumberPage> {
 
 class RandomYesNopage extends StatefulWidget {
   @override
-  _RandomYesNopage createState() => _RandomYesNopage();
+  _RandomYesNopageState createState() => _RandomYesNopageState();
 }
 
-class _RandomYesNopage extends State<RandomYesNopage> {
+class _RandomYesNopageState extends State<RandomYesNopage> {
   List<int> _History = [];
-  bool _isDrawer2Open = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _startController = TextEditingController();
   final TextEditingController _endController = TextEditingController();
   String _URL = 'assets/images/1.jpg';
-  int _randomNumber = 0;
 
   void addHistory(int input) {
     setState(() {
       _History.add(input);
-    });
-  }
-
-  void _openDrawer2() {
-    setState(() {
-      _isDrawer2Open = !_isDrawer2Open; // Toggle the value of _isDrawer2Open
     });
   }
 
@@ -466,102 +458,104 @@ class _RandomYesNopage extends State<RandomYesNopage> {
 
   String result = '';
 
+
   void generateRandomAnswer() {
-    final random = Random();
-    bool randomBool = random.nextBool();
-    setState(() {
-      result = randomBool ? 'Yes' : 'No';
+
+    Future.delayed(Duration(seconds: 0), () {
+      final random = Random();
+      bool randomBool = random.nextBool();
+      setState(() {
+        result = randomBool ? 'Yes' : 'No';
+      });
+      Future.delayed(Duration(seconds: 1), () {
+        setState(() {
+          result= ''; // Ẩn dòng chữ sau 1 giây
+        });
+      });
     });
   }
+
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scaffoldKey,
-        body: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-              // image: NetworkImage(_URL),
-              image: AssetImage(_URL),
-              fit: BoxFit.cover,
-            )),
-            child: Column(
+      key: _scaffoldKey,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(_URL),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 60,
+            ),
+            Row(
               children: [
                 SizedBox(
-                  height: 60,
+                  width: 30,
                 ),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 30,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.arrow_back),
-                      color: Colors.white,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    SizedBox(
-                      width: 220,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        _showAlertDialog();
-                      },
-                      icon: Icon(Icons.settings),
-                      color: Colors.white,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    )
-                  ],
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back),
+                  color: Colors.white,
+                  alignment: Alignment.centerLeft,
                 ),
                 SizedBox(
-                  height: 80,
+                  width: 220,
                 ),
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AnimatedTextKit(
-                          repeatForever: true, // Lặp vô hạn
-                          animatedTexts: [
-                            TypewriterAnimatedText(
-                              result,
-                              textStyle: TextStyle(fontSize: 100, color: Colors.white),
-                              speed: Duration(milliseconds: 100), // Tốc độ hiệu ứng
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 50.0),
-                        ElevatedButton(
-                          onPressed: generateRandomAnswer,
-                          child: Text(
-                            'Yes or NO',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            fixedSize: Size(200, 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(color: Colors.white),
-                            ),
-                            backgroundColor:
-                                Colors.transparent.withOpacity(0), //
-                          ),
-                        ),
-                        SizedBox(height: 20.0),
-                      ],
-                    ),
-                  ),
+                IconButton(
+                  onPressed: () {
+                    _showAlertDialog();
+                  },
+                  icon: Icon(Icons.settings),
+                  color: Colors.white,
+                  alignment: Alignment.centerLeft,
                 ),
+                SizedBox(
+                  width: 10,
+                )
               ],
-            )));
+            ),
+            SizedBox(
+              height: 80,
+            ),
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(result,style: TextStyle(fontSize: 80,color: Colors.white),),
+                    SizedBox(height: 50.0),
+                    ElevatedButton(
+                      onPressed: generateRandomAnswer,
+                      child: Text(
+                        'Yes or NO',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        fixedSize: Size(200, 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          side: BorderSide(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.transparent.withOpacity(0),
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
